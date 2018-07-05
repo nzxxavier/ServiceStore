@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>在Form表单中使用验证码</title>
+    <script type="text/javascript">
+        //刷新验证码
+        function changeImg(obj,createTypeFlag){
+            document.getElementById(obj.id).src="${pageContext.request.contextPath}/servlet/DrawImage?createTypeFlag="+createTypeFlag+"&"+Math.random();
+        }
+    </script>
+</head>
+
+<body>
+<form name="loginForm" id="loginForm" action="Login" method="post">
+    <input name="name" id="name" value="" class="txt" type="text" placeholder="用户名">
+    <input name="password" id="password" class="txt" type="password" placeholder="密码">
+    <button id="btn_Login" class="btn_Login">立即登录</button>
+</form>
+</body>
+</html>
