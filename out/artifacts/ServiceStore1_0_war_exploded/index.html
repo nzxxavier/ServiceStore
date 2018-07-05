@@ -1,20 +1,19 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>在Form表单中使用验证码</title>
-    <script type="text/javascript">
-        //刷新验证码
-        function changeImg(obj,createTypeFlag){
-            document.getElementById(obj.id).src="${pageContext.request.contextPath}/servlet/DrawImage?createTypeFlag="+createTypeFlag+"&"+Math.random();
-        }
-    </script>
+    <title>欢迎使用ServiceStore！</title>
+    <meta name="keyword" content="跨界服务,建模工具">
+    <meta name="description" content="面向跨界服务的建模工具">
+    <meta name="author" content="聂之翔">
+    <meta name="robot" content="index">
+    <meta http-equiv="Content-Type" content="text/html; charset=GB2312">
+    <link rel="stylesheet" href="./WEB-INF/CSS/index.css" type="text/css">
 </head>
 
 <body>
-<form name="loginForm" id="loginForm" action="Login" method="post">
-    <input name="name" id="name" value="" class="txt" type="text" placeholder="用户名">
-    <input name="password" id="password" class="txt" type="password" placeholder="密码">
-    <button id="btn_Login" class="btn_Login">立即登录</button>
-</form>
+    <div class="topBar">
+        <a href="login.jsp" type="button" class="btn_Login">登录</a>
+        <a href="register.jsp" type="button" class="btn_Register">注册</a>
+    </div>
 </body>
 </html>

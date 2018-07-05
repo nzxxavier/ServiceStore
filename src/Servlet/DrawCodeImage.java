@@ -40,7 +40,7 @@ public class DrawCodeImage extends HttpServlet {
         //String random = drawRandomNum((Graphics2D) g,"l");//生成纯字母的验证码图片
         String random = drawRandomNum((Graphics2D) g,drawCodeImage);//根据客户端传递的drawCodeImage标识生成验证码图片
         //7.将随机数存在session中
-        req.getSession().setAttribute("checkcode", random);
+        req.getSession().setAttribute("checkCode", random);
         //8.设置响应头通知浏览器以图片的形式打开
         resp.setContentType("image/jpeg");//等同于response.setHeader("Content-Type", "image/jpeg");
         //9.设置响应头控制浏览器不要缓存
@@ -68,7 +68,7 @@ public class DrawCodeImage extends HttpServlet {
      */
     private void setBorder(Graphics g) {
         // 设置边框颜色
-        g.setColor(Color.BLUE);
+        g.setColor(Color.BLACK);
         // 边框区域
         g.drawRect(1, 1, WIDTH - 2, HEIGHT - 2);
     }
