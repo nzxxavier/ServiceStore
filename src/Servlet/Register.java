@@ -3,21 +3,19 @@ package Servlet;
 import Controller.DBAccessor;
 import Model.User;
 
-import javax.servlet.*;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- *  登录跳转响应
- */
-public class Login extends HttpServlet {
+public class Register extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         Boolean codeImageIsRight = false;
-        Boolean loginIsSucced = false;
+        Boolean registerIsSucced = false;
+
         //检查验证码
         String clientCheckCode = req.getParameter("validateCode");//接收客户端浏览器提交上来的验证码
         clientCheckCode = clientCheckCode.toLowerCase();
@@ -30,23 +28,26 @@ public class Login extends HttpServlet {
             System.out.println("验证码验证失败！");
         }
 
-        //获取用户名和密码
+        //检查用户名和密码
         String name = req.getParameter("name");
         String password = req.getParameter("password");
+        String mail = req.getParameter("mail");
 
-        //数据库检查用户名和密码
+        //获取数据库连接
         DBAccessor accessor = DBAccessor.getInstance();
         accessor.getConnection();
-        User temp = accessor.getUser(name);
-        if(password.equals(temp.getPassword()))
-            loginIsSucced = true;
-        else{
-            resp.sendRedirect("login.jsp");
-        }
+
+        //插入数据
+        User temp = new User(true);
+        temp.setName(name);
+        temp.setPassword(password);
+        temp.setMail(mail);
+        if(accessor.addUser(temp))
+            registerIsSucced = true;
 
         //跳转至用户主界面
-        if(codeImageIsRight && loginIsSucced){
-            System.out.println("登陆成功！");
+        if(codeImageIsRight && registerIsSucced){
+            System.out.println("注册成功！");
             resp.sendRedirect("diagrams.jsp");
         }
     }
@@ -54,7 +55,6 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        System.out.println("ee");
         doGet(req,resp);
     }
 }

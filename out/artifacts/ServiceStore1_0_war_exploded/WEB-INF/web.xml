@@ -27,4 +27,12 @@
         <servlet-name>CheckCodeImage</servlet-name>
         <url-pattern>/CheckCodeImage</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <servlet-class>Servlet.Register</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Register</servlet-name>
+        <url-pattern>/Register</url-pattern>
+    </servlet-mapping>
 </web-app>
