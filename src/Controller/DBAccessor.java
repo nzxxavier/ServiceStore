@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Diagram;
 import Model.User;
 import com.mysql.jdbc.Driver;
 
@@ -24,7 +25,7 @@ public class DBAccessor {
      */
     private DBAccessor(){
         //在这里初始化你的数据库设置
-        url = "jdbc:mysql://localhost:3306/nzx_db?serverTimezone=UTC";
+        url = "jdbc:mysql://localhost:3306/database_nzx?serverTimezone=UTC";
         username = "nzx";
         password = "nzhx1234";
     }
@@ -46,10 +47,34 @@ public class DBAccessor {
             conn = DriverManager.getConnection(url,username,password);
             if(conn != null)
                 System.out.println("连接成功!");
+            //无则创建表，有则不创建
+            createTable();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    /**
+     * 创建表：User、Diagram、UserHasDiagram
+     */
+    private void createTable(){
+        String createUser = "CREATE TABLE user(\n" +
+                "  userid VARCHAR(33) primary key,\n" +
+                "  name VARCHAR(12) NOT NULL unique,\n" +
+                "  password VARCHAR(12) NOT NULL,\n" +
+                "  mail VARCHAR(64) \n" +
+                ");";
+        if(execSQL(createUser))
+            System.out.println("创建用户表成功！");
+        String createDiagram = "CREATE TABLE `diagram` (\n" +
+                "  diagramid varchar(33) PRIMARY KEY,\n" +
+                "  userid varchar(33) NOT NULL,\n" +
+                "  name varchar(20) NOT NULL,\n" +
+                "  path varchar(100) NOT NULL UNIQUE,\n" +
+                "  CONSTRAINT `fk_userid` FOREIGN KEY (`userid`) REFERENCES `user` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE" +
+                ");";
+        if(execSQL(createDiagram))
+            System.out.println("创建模型图表成功！");
     }
     /**
      * 执行SQL语句
@@ -92,7 +117,7 @@ public class DBAccessor {
         return null;
     }
     /**
-     * 执行SQL查询语句
+     * 获得所有用户
      * @return 执行成功返回true
      */
     public List<User> getAllUser(){
@@ -159,6 +184,74 @@ public class DBAccessor {
         String mail = user.getName();
 
         String sql = String.format("insert into user value(\'%s\',\'%s\',\'%s\',\'%s\')",uuid,name,password,mail);
+
+        return execSQL(sql);
+    }
+    /**
+     * 获得所有模型
+     * @return 执行成功返回true
+     */
+    public List<Diagram> getAllDiagram(){
+        String sql = "SELECT * FROM DIAGRAM";
+        //执行语句
+        ResultSet rs = execQuery(sql);
+        List<Diagram> result = new ArrayList<>();
+        try {
+            while (rs.next()){
+                //每行对应一个用户
+                Diagram temp = new Diagram(false);
+                //获取并设置信息
+                temp.setUUID(rs.getString("UUID"));
+                temp.setName(rs.getString("name"));
+                //插入链表
+                result.add(temp);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+    /**
+     * 根据用户检索模型
+     * @param user 拥有这个模型的用户
+     * @return 用户
+     */
+    public Diagram getDiagram(User user, String name){
+        Diagram result = new Diagram(false);
+        String sql = String.format("SELECT * FROM DIAGRAM WHERE userid=\'%s\' AND diagramid=\'%s\'",user.getUUID(),name);
+        //执行语句
+        ResultSet rs = execQuery(sql);
+        try {
+            if (rs.next()){
+                result.setUUID(rs.getString("userid"));
+                result.setName(rs.getString("name"));
+                result.setPath(rs.getString("path"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        catch (NullPointerException ne){
+            result.setUUID("");
+            result.setName("");
+            result.setPath("");
+        }
+        return result;
+    }
+    /**
+     * 根据用户和模型增加模型
+     * @param user 增加模型的用户
+     * @param diagram 增加的模型
+     * @return 执行成功返回true
+     */
+    public boolean addDiagram(User user, Diagram diagram){
+        String userid = user.getUUID();
+        String diagramid = diagram.getUUID();
+        String name = diagram.getName();
+        String path = diagram.getPath();
+
+        String sql = String.format("insert into diagram value(\'%s\',\'%s\',\'%s\',\'%s\')",diagramid,userid,name,path);
 
         return execSQL(sql);
     }

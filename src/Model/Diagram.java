@@ -2,25 +2,21 @@ package Model;
 
 import java.util.UUID;
 
-public class User {
+public class Diagram {
     private String uuid;
     private String name;
-    private String password;
-    private String mail;
+    private String path;
 
     private Boolean uuidLocked = false;
 
-    public User(Boolean genUUID){
+    public Diagram(Boolean genUUID){
         if(genUUID){
             uuid = UUID.randomUUID().toString().replaceAll("-", "");
-            uuidLocked = true;
         }
         else {
             uuid = null;
         }
         name = null;
-        password = null;
-        mail = null;
     }
 
     public String getUUID() {
@@ -31,30 +27,22 @@ public class User {
         return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getMail() {
-        return mail;
+    public String getPath() {
+        return path;
     }
 
     public void setUUID(String UUID) {
         if (!uuidLocked)
             this.uuid = UUID;
         else
-            System.out.println("这是个新生成的用户，无法更改uuid");
+            System.out.println("这是个新生成的图表，无法更改uuid");
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setPath(String path) {
+        this.path = path;
     }
 }
